@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>strong-castle-hill-management-09-2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+/* KESSEL_FONT_PLACEHOLDER */
+:root { --black:#000000; --white:#ffffff; --sky:#87CEEB; --sky-light:#E6F7FF; --gray-light:#f5f5f5; --gray-border:#e0e0e0; --success:#2ecc71; --warning-acc:#f59e0b; --danger-acc:#ef4444; --topbar-h:52px; --secbar-h:36px; --transition:0.2s ease; }
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-top: calc(var(--topbar-h) + var(--secbar-h) + 12px); scroll-behavior: smooth; }
+body { font-family: 'Montserrat', sans-serif; background: var(--gray-light); color: var(--black); font-size: 13px; line-height: 1.6; margin: 0; padding: 0; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+.topbar { position: fixed; top: 0; left: 0; right: 0; height: var(--topbar-h); background: var(--black); border-bottom: 1px solid #1a1a1a; display: flex; align-items: center; padding: 0 20px 0 24px; z-index: 1000; gap: 16px; }
+.tb-wordmark { font-family: 'Kessel Heavy', 'Arial Black', sans-serif; font-size: 22px; color: var(--sky); letter-spacing: 3px; line-height: 1; white-space: nowrap; text-decoration: none; flex-shrink: 0; }
+.tb-doc-name { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #555; white-space: nowrap; flex-shrink: 0; }
+.tb-pills { display: flex; gap: 6px; align-items: center; margin-left: auto; flex-shrink: 0; }
+.tb-pill { padding: 4px 10px; border-radius: 20px; border: 1px solid #2a2a2a; font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #666; }
+.tb-pill.hi { border-color: rgba(135,206,235,0.3); color: var(--sky); background: rgba(135,206,235,0.07); }
+.tb-cog { width: 30px; height: 30px; flex-shrink: 0; background: none; border: 1px solid #2a2a2a; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all var(--transition); }
+.tb-cog svg { width: 13px; height: 13px; color: #666; }
+.tb-cog:hover, .tb-cog.active { border-color: var(--sky); background: rgba(135,206,235,0.1); }
+.tb-cog:hover svg, .tb-cog.active svg { color: var(--sky); }
+.secbar { position: fixed; top: var(--topbar-h); left: 0; right: 0; height: var(--secbar-h); background: var(--black); border-bottom: 2px solid var(--sky); display: flex; align-items: stretch; z-index: 990; }
+.sec-link { flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px; text-decoration: none; font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #666; transition: all var(--transition); border-right: 1px solid #111; }
+.sec-link:last-child { border-right: none; }
+.sec-link:hover { color: var(--sky); background: rgba(135,206,235,0.05); }
+.sec-link.active { color: var(--sky); background: rgba(135,206,235,0.08); }
+.sec-num { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: rgba(135,206,235,0.15); font-size: 8px; font-weight: 700; color: var(--sky); flex-shrink: 0; }
+.sec-link.active .sec-num { background: var(--sky); color: var(--black); }
+.btt { position: fixed; bottom: 24px; right: 24px; width: 40px; height: 40px; background: #000; border: 1px solid #87CEEB; color: #87CEEB; text-decoration: none; display: flex; align-items: center; justify-content: center; font-size: 16px; opacity: 0; transition: opacity 0.3s; z-index: 500; border-radius: 2px; }
+.btt.visible { opacity: 1; }
+.width-toggle { position: fixed; bottom: 70px; right: 24px; width: 40px; height: 40px; background: var(--black); border: 1px solid var(--sky); border-radius: 2px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 500; transition: all var(--transition); }
+.width-toggle:hover { border-color: var(--sky); }
+.width-toggle svg { width: 14px; height: 14px; color: var(--sky); }
+.width-toggle.fw { border-color: #333; }
+.width-toggle.fw svg { color: #666; }
+#page-wrap { padding-top: calc(var(--topbar-h) + var(--secbar-h)); }
+.page-header { background: #000; padding: 36px 48px 32px; border-bottom: 3px solid #87CEEB; }
+.page-header-inner { max-width: 1200px; margin: 0 auto; }
+.crumb { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #666666; margin-bottom: 8px; }
+.crumb span { color: #87CEEB; }
+.page-header h1 { font-family: 'Kessel Heavy', 'Arial Black', sans-serif; font-size: 42px; letter-spacing: 6px; text-transform: uppercase; color: #fff; line-height: 1; margin-bottom: 16px; margin-top: 0; }
+.meta-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.meta-pill { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #87CEEB; border: 1px solid rgba(135,206,235,0.4); padding: 3px 10px; border-radius: 20px; }
+.content-area { max-width: 1200px; margin: 0 auto; padding: 36px 48px 80px; }
+.section-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 2px; margin-bottom: 12px; overflow: hidden; }
+.section-card-header { background: #000; padding: 14px 20px; border-bottom: 2px solid #87CEEB; display: flex; align-items: center; justify-content: space-between; }
+.section-num-label { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #87CEEB; margin-bottom: 5px; }
+.section-title { font-family: 'Kessel Heavy', 'Arial Black', sans-serif; font-size: 22px; letter-spacing: 3px; text-transform: uppercase; color: #fff; line-height: 1; }
+.section-title em { font-style: normal; color: #87CEEB; }
+.section-card-body { padding: 18px 20px; }
+.section-gap { height: 28px; }
+.metric-strip { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 12px; }
+.metric-strip.three { grid-template-columns: repeat(3,1fr); }
+.m-card { background: #000; border-radius: 2px; padding: 20px 18px; border-bottom: 3px solid #87CEEB; }
+.m-lbl { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #555; margin-bottom: 8px; }
+.m-val { font-family: 'Kessel Heavy', 'Arial Black', sans-serif; font-size: 28px; color: #87CEEB; letter-spacing: 2px; line-height: 1; }
+.m-val.pos { color: #2ecc71; } .m-val.warn { color: #f59e0b; } .m-val.neg { color: #ef4444; }
+.m-sub { font-size: 10px; color: #aaa; margin-top: 6px; }
+.card { background: #fff; border: 1px solid #e0e0e0; border-radius: 2px; margin-bottom: 12px; }
+.card-head { background: #000; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; }
+.card-title { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #87CEEB; }
+.card-body { padding: 16px; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.data-table th { background: #000; color: #fff; padding: 9px 12px; text-align: left; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; white-space: nowrap; }
+.data-table td { padding: 9px 12px; border-bottom: 1px solid #f0f0f0; color: #333; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr.total td { font-weight: 700; background: #f5f5f5; border-top: 2px solid #000; }
+.table-note { font-size: 11px; color: #888; line-height: 1.5; margin: 0; padding: 10px 16px; border-top: 1px solid #f0f0f0; }
+.takeaways { background: #f8f9fa; border: 1px solid #e0e0e0; border-left: 3px solid #87CEEB; border-radius: 2px; padding: 16px 18px; margin-top: 12px; }
+.takeaways-title { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #000; margin-bottom: 10px; }
+.takeaways ul { list-style: none; padding: 0; margin: 0; }
+.takeaways li { font-size: 13px; color: #333; line-height: 1.65; padding: 5px 0 5px 16px; position: relative; border-bottom: 1px solid #eee; }
+.takeaways li:last-child { border-bottom: none; }
+.takeaways li::before { content: ">"; color: #87CEEB; position: absolute; left: 0; top: 6px; font-size: 10px; }
+.insight-text { font-size: 14px; line-height: 1.75; color: #333; margin-bottom: 12px; }
+.insight-text p { margin-bottom: 12px; margin-top: 0; }
+.insight-text p:last-child { margin-bottom: 0; }
+.exec-section { background: #fff; border: 1px solid #e0e0e0; border-radius: 2px; padding: 18px 20px; margin-bottom: 12px; }
+.exec-section-title { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #000; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #87CEEB; }
+.exec-list { list-style: none; padding: 0; margin: 0; }
+.exec-list li { font-size: 13px; color: #333; line-height: 1.65; padding: 5px 0 5px 14px; position: relative; border-bottom: 1px solid #e0e0e0; }
+.exec-list li:last-child { border-bottom: none; }
+.exec-list li::before { content: ">"; color: #87CEEB; position: absolute; left: 0; top: 6px; font-size: 10px; }
+.exec-list li strong { color: #000; font-weight: 700; }
+.two-col { display: flex; gap: 12px; margin-bottom: 12px; align-items: stretch; }
+.two-col .card { flex: 1; display: flex; flex-direction: column; margin-bottom: 0; }
+.two-col .card .card-body { flex: 1; display: flex; flex-direction: column; }
+.two-col .card .card-body .chart-canvas-wrap { flex: 1; height: auto; min-height: 180px; }
+.three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 12px; }
+.three-col .exec-section { margin-bottom: 0; }
+.chart-canvas-wrap { position: relative; height: 220px; width: 100%; display: block; }
+.chart-canvas-wrap canvas { position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important; }
+.recap-status { font-weight: 700; white-space: nowrap; }
+.recap-status.achieved { color: #2ecc71; } .recap-status.mixed { color: #f59e0b; } .recap-status.notland { color: #f59e0b; } .recap-status.inconclusive { color: #888; }
+/* EDIT MODE */
+.edit-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
+.edit-overlay.active { display: flex; }
+.edit-modal { background: var(--black); border: 1px solid #2a2a2a; border-top: 3px solid var(--sky); border-radius: 2px; width: 600px; max-width: 94vw; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; }
+.modal-head { padding: 16px 20px; border-bottom: 1px solid #1a1a1a; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.modal-head-title { font-family: 'Kessel Heavy', sans-serif; font-size: 14px; letter-spacing: 2px; color: var(--sky); text-transform: uppercase; }
+.modal-section-label { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #555; }
+.modal-close { width: 28px; height: 28px; background: none; border: 1px solid #333; border-radius: 2px; color: #666; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all var(--transition); flex-shrink: 0; }
+.modal-close:hover { border-color: var(--sky); color: var(--sky); }
+.modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+.modal-field { margin-bottom: 16px; } .modal-field:last-child { margin-bottom: 0; }
+.field-label { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #666; margin-bottom: 6px; display: block; }
+.field-input { width: 100%; background: #111; border: 1px solid #2a2a2a; border-radius: 2px; color: var(--white); font-family: 'Montserrat', sans-serif; font-size: 13px; line-height: 1.6; padding: 10px 12px; resize: vertical; transition: border-color var(--transition); }
+.field-input:focus { outline: none; border-color: var(--sky); }
+.bullet-list-editor { display: flex; flex-direction: column; gap: 6px; }
+.bullet-row { display: flex; gap: 6px; align-items: flex-start; }
+.bullet-input { flex: 1; background: #111; border: 1px solid #2a2a2a; border-radius: 2px; color: var(--white); font-family: 'Montserrat', sans-serif; font-size: 13px; line-height: 1.6; padding: 8px 10px; resize: vertical; transition: border-color var(--transition); }
+.bullet-input:focus { outline: none; border-color: var(--sky); }
+.bullet-remove { width: 28px; height: 34px; flex-shrink: 0; background: none; border: 1px solid #2a2a2a; border-radius: 2px; color: #555; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all var(--transition); font-size: 16px; margin-top: 1px; }
+.bullet-remove:hover { border-color: var(--danger-acc); color: var(--danger-acc); }
+.add-bullet-btn { background: none; border: 1px dashed #333; border-radius: 2px; color: #555; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 7px; cursor: pointer; transition: all var(--transition); width: 100%; }
+.add-bullet-btn:hover { border-color: var(--sky); color: var(--sky); }
+.modal-foot { padding: 14px 20px; border-top: 1px solid #1a1a1a; display: flex; gap: 8px; justify-content: flex-end; flex-shrink: 0; }
+.btn { padding: 8px 18px; border-radius: 2px; font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: all var(--transition); border: 1px solid transparent; }
+.btn-cancel { background: none; border-color: #333; color: #666; } .btn-cancel:hover { border-color: #555; color: #aaa; }
+.btn-save { background: var(--sky); border-color: var(--sky); color: var(--black); } .btn-save:hover { background: #6bb8d4; border-color: #6bb8d4; }
+.btn-save.pending { background: var(--warning-acc); border-color: var(--warning-acc); color: var(--black); } .btn-save.pending:hover { background: #e08c00; border-color: #e08c00; }
+.btn-export { background: none; border-color: rgba(135,206,235,0.3); color: var(--sky); margin-right: auto; } .btn-export:hover { background: rgba(135,206,235,0.07); }
+.pw-gate { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 3000; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+.pw-gate.active { display: flex; }
+.pw-box { background: var(--black); border: 1px solid #2a2a2a; border-top: 3px solid var(--sky); border-radius: 2px; padding: 32px; width: 360px; max-width: 94vw; text-align: center; }
+.pw-title { font-family: 'Kessel Heavy', sans-serif; font-size: 16px; letter-spacing: 3px; color: var(--sky); text-transform: uppercase; margin-bottom: 8px; }
+.pw-sub { font-size: 11px; color: #555; letter-spacing: 1px; margin-bottom: 24px; }
+.pw-input { width: 100%; background: #111; border: 1px solid #2a2a2a; border-radius: 2px; color: var(--white); font-family: 'Montserrat', sans-serif; font-size: 14px; padding: 11px 14px; text-align: center; letter-spacing: 3px; margin-bottom: 12px; transition: border-color var(--transition); }
+.pw-input:focus { outline: none; border-color: var(--sky); }
+.pw-error { font-size: 11px; color: var(--danger-acc); margin-bottom: 12px; min-height: 16px; }
+.pw-submit { width: 100%; background: var(--sky); border: none; border-radius: 2px; color: var(--black); font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 11px; cursor: pointer; transition: all var(--transition); }
+.pw-submit:hover { background: #6bb8d4; }
+.pw-cancel { width: 100%; background: none; border: 1px solid #2a2a2a; border-radius: 2px; color: #555; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 9px; cursor: pointer; margin-top: 8px; transition: all var(--transition); }
+.pw-cancel:hover { border-color: #555; color: #888; }
+.edit-trigger { display: none; width: 24px; height: 24px; flex-shrink: 0; background: rgba(135,206,235,0.08); border: 1px solid rgba(135,206,235,0.2); border-radius: 2px; cursor: pointer; align-items: center; justify-content: center; transition: all var(--transition); }
+.edit-trigger:hover { background: rgba(135,206,235,0.18); border-color: var(--sky); }
+.edit-trigger svg { width: 11px; height: 11px; color: var(--sky); }
+body.edit-mode .edit-trigger { display: flex; }
+body.edit-mode .section-card { outline: 1px dashed rgba(135,206,235,0.15); }
+.edit-banner { display: none; position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--sky); color: var(--black); font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 8px 20px; border-radius: 20px; z-index: 700; white-space: nowrap; }
+body.edit-mode .edit-banner { display: block; }
+@media (max-width: 768px) {
+  .page-header { padding: 28px 20px 24px; }
+  .page-header h1 { font-size: 26px; letter-spacing: 3px; }
+  .content-area { padding: 20px 16px 60px; }
+  .metric-strip { grid-template-columns: 1fr !important; gap: 8px; }
+  .metric-strip.three { grid-template-columns: 1fr !important; }
+  .m-card { padding: 14px 12px; }
+  .m-val { font-size: 22px; }
+  .section-card-body { padding: 14px 14px; }
+  .section-card-header { padding: 12px 14px; }
+  .section-title { font-size: 16px; letter-spacing: 2px; }
+  .data-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .data-table th, .data-table td { font-size: 11px; padding: 7px 8px; }
+  .tb-cog { display: none; }
+  .tb-doc-name { display: none; }
+  .secbar { display: none; }
+  #page-wrap { padding-top: 52px; }
+  .two-col { flex-direction: column; }
+  .two-col .card { flex: none; width: 100%; }
+  .three-col { grid-template-columns: 1fr !important; }
+  .chart-canvas-wrap { min-height: 220px; }
+  .exec-section { padding: 14px 14px; }
+}
+@media (max-width: 400px) { .page-header h1 { font-size: 22px; letter-spacing: 2px; } }
+@media (max-width: 1024px) {
+  .insight-text { font-size: 12px; line-height: 1.6; }
+  .insight-text p { margin-bottom: 8px; }
+  .exec-list li { font-size: 12px; line-height: 1.5; }
+  .takeaways li { font-size: 12px; }
+  .section-card-body p { font-size: 12px; line-height: 1.6; }
+}
+</style>
+</head>
+<body>
+<!-- PASSWORD GATE -->
+<div class="pw-gate" id="pwGate"><div class="pw-box"><div class="pw-title">Edit Mode</div><div class="pw-sub">Enter password to unlock</div><input class="pw-input" id="pwInput" type="password" placeholder="••••••••" autocomplete="off"><div class="pw-error" id="pwError"></div><button class="pw-submit" id="pwSubmit">Unlock</button><button class="pw-cancel" id="pwCancel">Cancel</button></div></div>
+<!-- EDIT MODAL -->
+<div class="edit-overlay" id="editOverlay"><div class="edit-modal" id="editModal"><div class="modal-head"><div><div class="modal-section-label" id="modalSectionLabel"></div><div class="modal-head-title" id="modalTitle"></div></div><button class="modal-close" id="modalClose">✕</button></div><div class="modal-body" id="modalBody"></div><div id="discardGate" style="display:none;padding:12px 20px;background:#1a0d00;border-top:1px solid rgba(249,115,22,0.3);flex-shrink:0;"><div style="font-size:11px;color:#f97316;font-weight:700;margin-bottom:8px;">You have unsaved changes.</div><div style="display:flex;gap:8px;"><button class="btn btn-cancel" style="color:#ef4444;border-color:rgba(239,68,68,0.3);font-size:10px;padding:5px 12px;" onclick="discardAndClose()">Discard changes</button><button class="btn btn-cancel" style="font-size:10px;padding:5px 12px;" onclick="hideDiscardGate()">Go back to save</button></div></div><div class="modal-foot"><button class="btn btn-export" id="btnExport">↓ Export HTML</button><button class="btn btn-cancel" id="btnCancel">Cancel</button><button class="btn btn-save" id="btnSave">Save Changes</button></div></div></div>
+<!-- EDIT BANNER -->
+<div class="edit-banner">Edit Mode Active — click ✏ icons to edit sections</div>
+
+<div class="topbar">
+  <a class="tb-wordmark" href="#page-wrap">STRONG</a>
+  <span class="tb-doc-name">SALES REPORT</span>
+  <div class="tb-pills">
+    <span class="tb-pill hi">Castle Hill</span>
+    <button class="tb-cog" id="editToggleBtn" onclick="triggerEditMode()" title="Edit mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+  </div>
+</div>
+<nav class="secbar"><a class="sec-link active" href="#s01"><span class="sec-num">01</span>Executive Summary</a><a class="sec-link" href="#s02"><span class="sec-num">02</span>Client Activity</a><a class="sec-link" href="#s03"><span class="sec-num">03</span>Studio Financials</a><a class="sec-link" href="#s04"><span class="sec-num">04</span>Session Attendance</a><a class="sec-link" href="#s05"><span class="sec-num">05</span>Sales &amp; Performance</a><a class="sec-link" href="#s06"><span class="sec-num">06</span>Summary</a></nav>
+<div id="page-wrap">
+<div class="page-header"><div class="page-header-inner">
+  <div class="crumb">STRONG Pilates <span>/ Sales Report</span></div>
+  <h1>Castle Hill</h1>
+  <div class="meta-pills"><span class="meta-pill">September 2026</span><span class="meta-pill">End of Quarter Q3</span><span class="meta-pill">Jul 2026 – Sep 2026</span></div>
+</div></div>
+<div class="content-area">
+<span class="section-anchor" id="s01" style="display:block;height:0;"></span>
+<div class="section-gap"></div>
+<div class="section-card">
+  <div class="section-card-header">
+    <div><div class="section-num-label">01</div><div class="section-title">Executive <em>Summary</em></div></div>
+    <button class="edit-trigger" onclick="openEditModal('exec-issues','Executive Summary','Key Issues')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+  </div>
+  <div class="section-card-body"><div class="card" style="margin-bottom:12px;"><div class="card-head"><span class="card-title">Current State</span></div><div class="card-body"><div class="insight-text"><p><strong>Membership:</strong> The member base grew to 195 across the quarter from 189 in July, with the active rate at 85.64% in September after reaching 87.96% in August. Suspended members fell from 36 to 28 over the period. Attrition held below the sub-7% target in every month, finishing at 3.13%.</p><p><strong>Revenue:</strong> Gross revenue totalled $154,270 for the quarter, easing from $52,785 in July to $50,321 in September. Membership revenue of $124,733 made up 80.9% of the total and held between $41,166 and $41,804 each month. Intro offer revenue fell to $1,786 in September from $3,233 in August.</p><p><strong>Utilisation:</strong> Booking utilisation stayed below the 75-85% band, ending the quarter at 58.34% after a high of 62.15% in August. Attendance utilisation closed at 52.73% against the 70-75% range. The booking-attendance gap stayed at 6.62% or under in all three months, inside the 10% maximum.</p><p><strong>Sales vs Cancellations:</strong> Sales exceeded cancellations in each month, with 39 memberships sold against 29 cancelled across the quarter. September recorded 11 memberships against 6 cancellations, while intro offers fell from 110 to 39 and first visits from 121 to 70 after the discounted offer period ended.</p></div></div></div><div class="three-col"><div class="exec-section"><div class="exec-section-title">Key Issues</div><ul class="exec-list" data-field="exec-issues"><li><strong>Membership conversion:</strong> Memberships sold fell from 16 in August to 11 in September, while intro offers fell from 110 to 39.</li><li><strong>Booking utilisation below target:</strong> At 58.34%, booking utilisation sits below the 75-85% band, and sessions offered declined from 486 to 456.</li><li><strong>Attendance utilisation below range:</strong> At 52.73% in September, attendance utilisation sits below the 70-75% healthy range.</li><li><strong>Suspended members:</strong> Suspended members rose from 23 in August to 28 in September, lowering the active rate from 87.96% to 85.64%.</li><li><strong>Lead volume:</strong> First visits fell from 121 to 70 in September, with no discounted intro offer running 10 August to 27 September.</li><li><strong>Package revenue:</strong> Packages declined each month, from $6,595 in July to $5,403 in September, while pack units sold rose to 79.</li></ul></div><div class="exec-section"><div class="exec-section-title">Active Interventions Being Deployed</div><ul class="exec-list" data-field="exec-interventions"><li><strong>50% Off The STRONG Experience:</strong> Live 28 September to 11 October for new and lapsed prospects, using Hapana packages and Grow emails to rebuild intro offer and first visit volume.</li><li><strong>FOH one-on-one sales training:</strong> Rolling out since late August to build FOH sales capability and lift membership conversion from intro offer and first visit volume.</li><li><strong>FOH rostering consistency:</strong> Holding FOH shifts to the existing guidelines so every intro offer lead receives consistent follow-up, addressing the gaps that limited membership conversion.</li><li><strong>EOSR report and trainer sales capture:</strong> Deploying into September to give daily visibility of sales activity and capture membership opportunities trainers identify in sessions.</li><li><strong>Movement Block I:</strong> Running 21 September to 25 October with updated class schedules and erg custom lists, intended to support booking volume toward the 75-85% band.</li></ul></div><div class="exec-section" style="margin-bottom:0;"><div class="exec-section-title">Expected Outcomes</div><ul class="exec-list" data-field="exec-outcomes"><li><strong>Membership conversion:</strong> Lift membership sales relative to intro offer volume through consistent FOH follow-up and one-on-one sales training, as 50% Off The STRONG Experience adds lead volume.</li><li><strong>Net membership growth:</strong> Support membership sales continuing to exceed cancellations, building total membership from 195 through the quarter ahead.</li><li><strong>Attrition:</strong> Hold attrition below the sub-7% target from 3.13% in September while new member volume increases.</li><li><strong>Booking utilisation:</strong> Rebuild booking utilisation from 58.34% toward the 75-85% band through the STRONG-ER Series and Black Friday sale.</li><li><strong>Suspended volume:</strong> Reduce suspended members from 28 toward the 23 recorded in August to support the active rate.</li></ul></div></div></div>
+</div>
+<span class="section-anchor" id="s02" style="display:block;height:0;"></span>
+<div class="section-gap"></div>
+<div class="section-card">
+  <div class="section-card-header">
+    <div><div class="section-num-label">02</div><div class="section-title">Client <em>Activity</em></div></div>
+    <button class="edit-trigger" onclick="openEditModal('mem-insight','Client Activity','Insight Text')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+  </div>
+  <div class="section-card-body"><div class="metric-strip"><div class="m-card"><div class="m-lbl">Total Members</div><div class="m-val">195</div><div class="m-sub">vs 191 prior month</div></div><div class="m-card"><div class="m-lbl">Active Members</div><div class="m-val">167</div><div class="m-sub">vs 168 prior month</div></div><div class="m-card"><div class="m-lbl">Active Rate</div><div class="m-val pos">85.64%</div><div class="m-sub">vs 87.96% prior month</div></div><div class="m-card"><div class="m-lbl">Attrition Rate</div><div class="m-val pos">3.13%</div><div class="m-sub">vs 6.35% prior month · target sub-7%</div></div></div><div class="two-col"><div class="card"><div class="card-head"><span class="card-title">Membership Status Trend</span></div><div class="card-body"><div class="chart-canvas-wrap"><canvas id="chartMembership"></canvas></div></div></div><div class="card"><div class="card-head"><span class="card-title">Insight</span></div><div class="card-body"><div class="insight-text"><p data-field="mem-insight-p1">Total membership closed the quarter at 195, up from 189 in July, as the active rate moved from 80.95% to 87.96% in August and 85.64% in September. Active members rose from 153 to 168 and then 167, while suspended members fell from 36 to 23 before rising to 28. Attrition stayed under the sub-7% target in every month at 5.76%, 6.35% and 3.13%, on 29 cancellations across the quarter.</p><p data-field="mem-insight-p2">Growth now depends on sales exceeding cancellations, which held in each month. Suspensions fell by 13 between July and August, then rose by 5 in September. September attrition of 3.13% is the lowest of the quarter, down from 6.77% in June and 6.35% in August in the prior report. The September total of 195 is four above August's 191, the base for the next period.</p></div></div></div></div><div class="card"><div class="card-head"><span class="card-title">Membership Status Trend — Monthly Detail</span></div><div class="card-body" style="padding:0;"><table class="data-table"><thead><tr><th>Month</th><th>Total Members</th><th>Active Members</th><th>Suspended Members</th><th>Active Rate %</th></tr></thead><tbody><tr><td>Jul 2026</td><td>189</td><td>153</td><td>36</td><td>80.95%</td></tr><tr><td>Aug 2026</td><td>191</td><td>168</td><td>23</td><td>87.96%</td></tr><tr><td>Sep 2026</td><td>195</td><td>167</td><td>28</td><td>85.64%</td></tr></tbody></table></div></div><div class="takeaways"><div class="takeaways-title">Key Takeaways</div><ul data-field="mem-takeaways"><li>Total membership rose from 189 in July to 195 in September.</li><li>Active rate closed the quarter at 85.64%, after 87.96% in August.</li><li>Suspended members rose from 23 in August to 28 in September.</li><li>Attrition stayed below the sub-7% target, finishing at 3.13%.</li></ul></div></div>
+</div>
+<span class="section-anchor" id="s03" style="display:block;height:0;"></span>
+<div class="section-gap"></div>
+<div class="section-card">
+  <div class="section-card-header">
+    <div><div class="section-num-label">03</div><div class="section-title">Studio <em>Financials</em></div></div>
+    <button class="edit-trigger" onclick="openEditModal('fin-insight','Studio Financials','Insight Text')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+  </div>
+  <div class="section-card-body"><div class="metric-strip"><div class="m-card"><div class="m-lbl">Gross Revenue</div><div class="m-val warn">$50,321</div><div class="m-sub">vs $51,164 prior month</div></div><div class="m-card"><div class="m-lbl">Membership Revenue</div><div class="m-val">$41,763</div><div class="m-sub">vs $41,166 prior month</div></div><div class="m-card"><div class="m-lbl">Package Revenue</div><div class="m-val">$5,403</div><div class="m-sub">vs $5,833 prior month</div></div><div class="m-card"><div class="m-lbl">Intro Offer Revenue</div><div class="m-val">$1,786</div><div class="m-sub">vs $3,233 prior month</div></div></div><div class="two-col"><div class="card"><div class="card-head"><span class="card-title">Revenue by Stream</span></div><div class="card-body"><div class="chart-canvas-wrap"><canvas id="chartRevenue"></canvas></div></div></div><div class="card"><div class="card-head"><span class="card-title">Insight</span></div><div class="card-body"><div class="insight-text"><p data-field="fin-insight-p1">Gross revenue totalled $154,270 for the quarter, with memberships contributing $124,733, or 80.9%. Gross moved from $52,785 in July to $51,164 in August and $50,321 in September. Memberships held between $41,166 and $41,804, while packages declined from $6,595 to $5,833 and $5,403. Intro offer revenue moved from $2,995 to $3,233, then $1,786. Fees were $1,241, $866 and $886.</p><p data-field="fin-insight-p2">Membership revenue formed a stable base while intro offer revenue followed the campaign calendar. The 50% Off Intro Offer ran 20 July to 9 August, and no discounted intro offer ran again until 28 September. Pack units sold rose from 65 to 79 in September alongside the $50 STRONG Week Pass, while package revenue declined. (While late cancel fees contribute to revenue, the goal is not to increase this stream-reduced fees indicate better member attendance behaviour, which drives long-term retention and stickiness.)</p></div></div></div></div><div class="card"><div class="card-head"><span class="card-title">Studio Financials — Monthly Detail</span></div><div class="card-body" style="padding:0;"><table class="data-table"><thead><tr><th>Month</th><th>Gross Revenue</th><th>Memberships</th><th>Packages</th><th>Intro Offers</th><th>Fees</th></tr></thead><tbody><tr><td>Jul 2026</td><td>$52,785</td><td>$41,804</td><td>$6,595</td><td>$2,995</td><td>$1,241</td></tr><tr><td>Aug 2026</td><td>$51,164</td><td>$41,166</td><td>$5,833</td><td>$3,233</td><td>$866</td></tr><tr><td>Sep 2026</td><td>$50,321</td><td>$41,763</td><td>$5,403</td><td>$1,786</td><td>$886</td></tr><tr class="total"><td>Quarter Total</td><td>$154,270</td><td>$124,733</td><td>$17,831</td><td>$8,014</td><td>$2,993</td></tr></tbody></table></div></div><div class="takeaways"><div class="takeaways-title">Key Takeaways</div><ul data-field="fin-takeaways"><li>Gross revenue totalled $154,270, easing from $52,785 in July to $50,321 in September.</li><li>Membership revenue held between $41,166 and $41,804, 80.9% of quarterly gross.</li><li>Package revenue declined each month, reaching $5,403 in September.</li><li>Intro offer revenue fell from $3,233 in August to $1,786 in September.</li></ul></div></div>
+</div>
+<span class="section-anchor" id="s04" style="display:block;height:0;"></span>
+<div class="section-gap"></div>
+<div class="section-card">
+  <div class="section-card-header">
+    <div><div class="section-num-label">04</div><div class="section-title">Session <em>Attendance</em></div></div>
+    <button class="edit-trigger" onclick="openEditModal('att-insight','Session Attendance','Insight Text')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+  </div>
+  <div class="section-card-body"><div class="metric-strip three"><div class="m-card"><div class="m-lbl">Booking Utilisation</div><div class="m-val neg">58.34%</div><div class="m-sub">vs 62.15% prior month · target 75–85%</div></div><div class="m-card"><div class="m-lbl">Attendance Utilisation</div><div class="m-val neg">52.73%</div><div class="m-sub">vs 55.53% prior month · target 70–75%</div></div><div class="m-card"><div class="m-lbl">Booking–Attendance Gap</div><div class="m-val pos">5.61%</div><div class="m-sub">vs 6.62% prior month · max 10%</div></div></div><div class="two-col"><div class="card"><div class="card-head"><span class="card-title">Utilisation Trend</span></div><div class="card-body"><div class="chart-canvas-wrap"><canvas id="chartUtil"></canvas></div></div></div><div class="card"><div class="card-head"><span class="card-title">Insight</span></div><div class="card-body"><div class="insight-text"><p data-field="att-insight-p1">Utilisation remained below both benchmarks across the quarter, while the booking-attendance gap stayed inside the 10% maximum. Booking utilisation moved from 56.26% in July to 62.15% in August and 58.34% in September, against the 75-85% band. Attendance utilisation moved from 50.73% to 55.53% and 52.73%, against the 70-75% healthy range. The gap held between 5.53% and 6.62%.</p><p data-field="att-insight-p2">Capacity contracted as sessions offered declined from 486 to 466 and then 456, with booking capacity moving from 4,161 to 4,013. Sessions booked moved from 2,341 to 2,524 and back to 2,341. September included STRONG Week (14 to 20 September), double-capacity classes on 12 September and the Block I schedule from 21 September, and booking utilisation eased by 3.81 points. Late cancels and no-shows totalled 724 across the quarter. Revenue per visit was $22.55, $20.27 and $21.51.</p></div></div></div></div><div class="card"><div class="card-head"><span class="card-title">Session Attendance — Monthly Detail</span></div><div class="card-body" style="padding:0;"><table class="data-table"><thead><tr><th>Month</th><th>Sessions</th><th>Booking Utilisation</th><th>Attendance Utilisation</th><th>Booking Capacity</th><th>Sessions Booked</th><th>Sessions Attended</th><th>Avg Rev/Visit</th></tr></thead><tbody><tr><td>Jul 2026</td><td>486</td><td>56.26%</td><td>50.73%</td><td>4,161</td><td>2,341</td><td>2,111</td><td>$22.55</td></tr><tr><td>Aug 2026</td><td>466</td><td>62.15%</td><td>55.53%</td><td>4,061</td><td>2,524</td><td>2,255</td><td>$20.27</td></tr><tr><td>Sep 2026</td><td>456</td><td>58.34%</td><td>52.73%</td><td>4,013</td><td>2,341</td><td>2,116</td><td>$21.51</td></tr></tbody></table></div></div></div>
+</div>
+<span class="section-anchor" id="s05" style="display:block;height:0;"></span>
+<div class="section-gap"></div>
+<div class="section-card">
+  <div class="section-card-header">
+    <div><div class="section-num-label">05</div><div class="section-title">Sales &amp; <em>Performance</em></div></div>
+    <button class="edit-trigger" onclick="openEditModal('sales-insight','Sales & Performance','Insight Text')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+  </div>
+  <div class="section-card-body"><div class="metric-strip"><div class="m-card"><div class="m-lbl">Memberships Sold</div><div class="m-val neg">11</div><div class="m-sub">vs 16 prior month</div></div><div class="m-card"><div class="m-lbl">Intro Offers Sold</div><div class="m-val">39</div><div class="m-sub">September 2026</div></div><div class="m-card"><div class="m-lbl">Attrition Rate</div><div class="m-val pos">3.13%</div><div class="m-sub">vs 6.35% prior month · target sub-7%</div></div><div class="m-card"><div class="m-lbl">First Visits</div><div class="m-val">70</div><div class="m-sub">September 2026</div></div></div><div class="two-col"><div class="card"><div class="card-head"><span class="card-title">Sales vs Cancellations</span></div><div class="card-body"><div class="chart-canvas-wrap"><canvas id="chartSalesCancel"></canvas></div></div></div><div class="card"><div class="card-head"><span class="card-title">Attrition Rate</span></div><div class="card-body"><div class="chart-canvas-wrap"><canvas id="chartAttrition"></canvas></div></div></div></div><div class="card"><div class="card-head"><span class="card-title">Sales Performance — All Products</span></div><div class="card-body"><div class="chart-canvas-wrap" style="height:240px;"><canvas id="chartSalesPerf"></canvas></div></div></div><div class="card"><div class="card-head"><span class="card-title">Sales &amp; Performance — Monthly Detail</span></div><div class="card-body" style="padding:0;"><table class="data-table"><thead><tr><th>Month</th><th>Memberships Sold</th><th>Intro Offers Sold</th><th>Packs Sold</th><th>Cancelled Members</th><th>Attrition Rate</th><th>First Visits</th></tr></thead><tbody><tr><td>Jul 2026</td><td>12</td><td>83</td><td>69</td><td>11</td><td>5.76%</td><td>72</td></tr><tr><td>Aug 2026</td><td>16</td><td>110</td><td>65</td><td>12</td><td>6.35%</td><td>121</td></tr><tr><td>Sep 2026</td><td>11</td><td>39</td><td>79</td><td>6</td><td>3.13%</td><td>70</td></tr><tr class="total"><td>Quarter Total</td><td>39</td><td>232</td><td>213</td><td>29</td><td>—</td><td>263</td></tr></tbody></table></div></div><div class="card"><div class="card-head"><span class="card-title">Insight</span></div><div class="card-body"><div class="insight-text"><p data-field="sales-insight-p1">Memberships sold stayed between 11 and 16 and exceeded cancellations in every month, while intro offers and first visits rose in August and fell in September. The quarter recorded 39 memberships against 29 cancellations, 232 intro offers, 213 packs and 263 first visits. Intro offers moved from 83 to 110 and 39, first visits from 72 to 121 and 70, and memberships from 12 to 16 and 11. Attrition was 5.76%, 6.35% and 3.13%, against 6.77% in June.</p><p data-field="sales-insight-p2">No discounted intro offer ran from 10 August to 27 September, which lines up with the September fall in intro offers and first visits. August's 110 intro offers were followed by 11 membership sales in September, an indicative 10% against an indicative 19% from July's 83. One-on-one FOH sales training and the EOSR report with trainer sales capture, rolled out from late August, are the levers aimed at conversion.</p></div></div></div><div class="takeaways"><div class="takeaways-title">Key Takeaways</div><ul data-field="sales-takeaways"><li>Memberships sold exceeded cancellations in every month, 39 against 29 for the quarter.</li><li>Intro offers fell from 110 to 39 and first visits from 121 to 70.</li><li>Attrition held below sub-7% all quarter, finishing at 3.13% in September.</li><li>No discounted intro offer ran from 10 August to 27 September.</li></ul></div></div>
+</div>
+<span class="section-anchor" id="s06" style="display:block;height:0;"></span>
+<div class="section-gap"></div>
+<div class="section-card">
+  <div class="section-card-header">
+    <div><div class="section-num-label">06</div><div class="section-title">Summary &amp; <em>Path Forward</em></div></div>
+    <button class="edit-trigger" onclick="openEditModal('summary-insight','Summary & Path Forward','Insight Text')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+  </div>
+  <div class="section-card-body"><div class="insight-text"><p data-field="summary-insight-p1">Castle Hill closed the quarter with 195 members, attrition under the sub-7% target in all three months and gross revenue of $154,270, with sales ahead of cancellations each month. Utilisation remained below both benchmarks, at 58.34% booking and 52.73% attendance in September, and suspended members stood at 28.</p><p data-field="summary-insight-p2">The binding constraint is membership conversion from a smaller base of intro offers, alongside booking volume. 50% Off The STRONG Experience is live to 11 October for new and lapsed prospects, supported by HQ emails through Grow, and should rebuild lead volume for FOH follow-up. The STRONG-ER Series (26 October to 22 November), the Black Friday sale (9 to 30 November) and Movement Block K (from 30 November) give the studio further reasons to lift bookings. Sales ahead of cancellations should, over time, support total membership growth and booking utilisation.</p></div><div class="takeaways"><div class="takeaways-title">Key Takeaways</div><ul data-field="summary-takeaways"><li>Membership reached 195 with attrition below sub-7% in every month.</li><li>Booking and attendance utilisation remain below target at 58.34% and 52.73%.</li><li>Membership conversion is the binding constraint on a smaller intro offer base.</li><li>50% Off The STRONG Experience, live to 11 October, supports lead volume.</li></ul></div></div>
+</div>
+</div>
+</div>
+<a class="btt" id="btt" href="#page-wrap">↑</a>
+<button class="width-toggle" id="widthToggle" title="Toggle fixed/full width"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h12M5 5l-3 3 3 3M11 5l3 3-3 3"/></svg></button>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+<script>
+
+var C_SKY = '#87CEEB'; var C_BLACK = '#000000'; var C_WHITE = '#ffffff';
+var C_GRID = 'rgba(0,0,0,0.07)'; var C_TICK = '#888';
+var C_SKYALPHA = 'rgba(135,206,235,0.15)';
+try { Chart.register(ChartDataLabels); } catch(e) {}
+Chart.defaults.font.family = 'Montserrat';
+Chart.defaults.font.size = 11;
+Chart.defaults.maintainAspectRatio = false;
+function lightScales() { return {
+  y: { grid:{color:C_GRID}, ticks:{color:C_TICK,font:{size:10}}, border:{dash:[3,3]} },
+  x: { grid:{color:C_GRID}, ticks:{color:C_TICK,font:{size:10}}, border:{dash:[3,3]} }
+}; }
+var legendLight = { position:'top', labels:{color:'#444',font:{size:10},boxWidth:10,padding:12} };
+var pillLabel = {
+  display:true, color:'#000', font:{size:(window.innerWidth<1024?7:10),weight:'700',family:'Montserrat'},
+  backgroundColor:'rgba(255,255,255,0.92)', borderRadius:3,
+  padding:(window.innerWidth<1024)?{top:1,bottom:1,left:2,right:2}:{top:2,bottom:2,left:5,right:5},
+  borderWidth:1, borderColor:'rgba(0,0,0,0.08)', clamp:true
+};
+function lineLabels(fmt) { return Object.assign({}, pillLabel, {
+  align: function(ctx) { if (ctx.dataIndex === 0) return 'right'; if (ctx.dataIndex === ctx.chart.data.labels.length - 1) return 'left'; return ctx.datasetIndex === 0 ? 'top' : 'bottom'; },
+  anchor:'center', offset:8, formatter: fmt || function(v){ return v; } }); }
+var barLabels = function(fmt) { return { display:true, align:'end', anchor:'end', offset:1, clamp:true,
+  color:'#000', font:{size:(window.innerWidth<1024?7:9),weight:'700',family:'Montserrat'},
+  backgroundColor:'rgba(255,255,255,0.92)', borderRadius:3,
+  padding:{top:2,bottom:2,left:4,right:4}, borderWidth:1, borderColor:'rgba(0,0,0,0.08)', formatter: fmt || function(v){return v;} }; };
+function dsPrimary(label,data){ return {label:label,data:data,borderColor:C_BLACK,backgroundColor:'rgba(0,0,0,0.04)',pointBackgroundColor:C_BLACK,pointRadius:4,pointHoverRadius:6,borderWidth:2,tension:0.3}; }
+function dsSecondary(label,data){ return {label:label,data:data,borderColor:C_SKY,backgroundColor:C_SKYALPHA,pointBackgroundColor:C_SKY,pointRadius:4,pointHoverRadius:6,borderWidth:2,tension:0.3}; }
+function dsTertiary(label,data){ return {label:label,data:data,borderColor:'#ccc',borderDash:[4,3],fill:false,pointBackgroundColor:'#bbb',pointRadius:4,pointHoverRadius:6,borderWidth:2,tension:0.3}; }
+function dynMax(vals){ return Math.ceil(Math.max.apply(null,vals)/5)*5+5; }
+var LABELS = ['Jul 2026','Aug 2026','Sep 2026'];
+
+new Chart(document.getElementById('chartMembership'), { type:'line',
+  data:{ labels:LABELS, datasets:[ Object.assign(dsPrimary('Total Members',[189,191,195]),{datalabels:lineLabels()}), Object.assign(dsSecondary('Active Members',[153,168,167]),{datalabels:lineLabels()}), Object.assign(dsTertiary('Suspended Members',[36,23,28]),{datalabels:lineLabels()}) ] },
+  options:{ layout:{padding:{top:28,left:8,right:36,bottom:16}}, plugins:{legend:legendLight}, scales:(function(){ var s=lightScales(); s.y.min=0; s.y.max=240; return s; })() } });
+new Chart(document.getElementById('chartRevenue'), { type:'bar',
+  data:{ labels:LABELS, datasets:[ {label:'Memberships',data:[41804,41166,41763],backgroundColor:C_SKY,borderRadius:2}, {label:'Packages',data:[6595,5833,5403],backgroundColor:'#ddd',borderRadius:2}, {label:'Intro Offers',data:[2995,3233,1786],backgroundColor:C_BLACK,borderRadius:2} ] },
+  options:{ layout:{padding:{top:40,left:8,right:16,bottom:8}}, plugins:{legend:legendLight, datalabels:barLabels(function(v){ return '$'+(v/1000).toFixed(1)+'k'; })},
+    scales:(function(){ var s=lightScales(); s.y.min=0; s.y.max=dynMax([41.804,41.166,41.763,6.595])*1000; s.y.ticks.callback=function(v){ return '$'+(v/1000).toFixed(0)+'k'; }; return s; })() } });
+new Chart(document.getElementById('chartUtil'), { type:'line',
+  data:{ labels:LABELS, datasets:[ Object.assign(dsPrimary('Booking Utilisation',[56.26,62.15,58.34]),{datalabels:lineLabels(function(v){return v+'%';})}), Object.assign(dsSecondary('Attendance Utilisation',[50.73,55.53,52.73]),{datalabels:lineLabels(function(v){return v+'%';})}) ] },
+  options:{ layout:{padding:{top:28,left:8,right:36,bottom:16}}, plugins:{legend:legendLight}, scales:(function(){ var s=lightScales(); s.y.min=40; s.y.max=70; s.y.ticks.callback=function(v){return v+'%';}; return s; })() } });
+new Chart(document.getElementById('chartSalesCancel'), { type:'bar',
+  data:{ labels:LABELS, datasets:[ {label:'Memberships Sold',data:[12,16,11],backgroundColor:C_SKY,borderRadius:2}, {label:'Cancelled',data:[11,12,6],backgroundColor:C_BLACK,borderRadius:2} ] },
+  options:{ layout:{padding:{top:40,left:8,right:16,bottom:8}}, plugins:{legend:legendLight, datalabels:barLabels()}, scales:(function(){ var s=lightScales(); s.y.min=0; s.y.max=dynMax([12,16,11,11,12,6]); return s; })() } });
+new Chart(document.getElementById('chartAttrition'), { type:'line',
+  data:{ labels:LABELS, datasets:[ Object.assign(dsPrimary('Attrition Rate',[5.76,6.35,3.13]),{datalabels:lineLabels(function(v){return v+'%';})}), {label:'Target (7%)',data:[7,7,7],borderColor:C_SKY,borderDash:[5,4],pointRadius:0,borderWidth:1.5,fill:false,datalabels:{display:false}} ] },
+  options:{ layout:{padding:{top:28,left:8,right:36,bottom:16}}, plugins:{legend:legendLight}, scales:(function(){ var s=lightScales(); s.y.min=2; s.y.max=8; s.y.ticks.callback=function(v){return v+'%';}; return s; })() } });
+new Chart(document.getElementById('chartSalesPerf'), { type:'line',
+  data:{ labels:LABELS, datasets:[ Object.assign(dsPrimary('Intro Offers',[83,110,39]),{datalabels:lineLabels()}), Object.assign(dsSecondary('Memberships',[12,16,11]),{datalabels:lineLabels()}), Object.assign(dsTertiary('Packs',[69,65,79]),{datalabels:lineLabels()}) ] },
+  options:{ layout:{padding:{top:28,left:8,right:36,bottom:16}}, plugins:{legend:legendLight}, scales:(function(){ var s=lightScales(); s.y.min=0; s.y.max=130; return s; })() } });
+
+window.addEventListener("scroll", function() {
+  var y = window.scrollY; var btt = document.getElementById("btt");
+  if (y > 300) { btt.classList.add("visible"); } else { btt.classList.remove("visible"); }
+  var sections = ["s01","s02","s03","s04","s05","s06"]; var links = document.querySelectorAll(".sec-link"); var active = 0;
+  var atBottom = (window.innerHeight + window.scrollY) >= document.body.scrollHeight - 40;
+  if (atBottom) { active = sections.length - 1; } else { sections.forEach(function(id,i) { var el = document.getElementById(id); if (el && el.getBoundingClientRect().top < 100) active = i; }); }
+  links.forEach(function(l,i){ l.classList.toggle("active", i===active); });
+});
+var fixedWidth = true; var contentArea = document.querySelector(".content-area");
+document.getElementById("widthToggle").addEventListener("click", function() {
+  fixedWidth = !fixedWidth;
+  if (fixedWidth) { contentArea.style.maxWidth = "1200px"; this.classList.remove("fw"); }
+  else { contentArea.style.maxWidth = "none"; this.classList.add("fw"); }
+});
+
+
+var store = {};
+function initStore() { document.querySelectorAll("[data-field]").forEach(function(el) { var key = el.getAttribute("data-field"); if (el.tagName === "UL") { store[key] = Array.from(el.querySelectorAll("li")).map(function(li) { return li.innerHTML; }); } else { store[key] = el.innerHTML; } }); }
+function renderStore() { document.querySelectorAll("[data-field]").forEach(function(el) { var key = el.getAttribute("data-field"); if (!(key in store)) return; if (el.tagName === "UL") { el.innerHTML = store[key].map(function(item) { return "<li>" + item + "</li>"; }).join(""); } else { el.innerHTML = store[key]; } }); }
+var editUnlocked = false;
+function triggerEditMode() { if (editUnlocked) { document.body.classList.remove("edit-mode"); document.getElementById("editToggleBtn").classList.remove("active"); editUnlocked = false; } else { document.getElementById("pwGate").classList.add("active"); document.getElementById("pwInput").value = ""; document.getElementById("pwError").textContent = ""; setTimeout(function() { document.getElementById("pwInput").focus(); }, 100); } }
+document.getElementById("pwSubmit").addEventListener("click", checkPassword);
+document.getElementById("pwCancel").addEventListener("click", function() { document.getElementById("pwGate").classList.remove("active"); });
+document.getElementById("pwInput").addEventListener("keydown", function(e) { if (e.key === "Enter") checkPassword(); });
+function checkPassword() { var val = document.getElementById("pwInput").value; if (val === "Strong123*") { document.getElementById("pwGate").classList.remove("active"); editUnlocked = true; document.body.classList.add("edit-mode"); document.getElementById("editToggleBtn").classList.add("active"); } else { document.getElementById("pwError").textContent = "Incorrect password."; document.getElementById("pwInput").value = ""; document.getElementById("pwInput").focus(); } }
+var currentFieldKey = null;
+var fieldConfig = {};
+fieldConfig["exec-issues"] = { type: "bullets", key: "exec-issues" };
+fieldConfig["exec-interventions"] = { type: "bullets", key: "exec-interventions" };
+fieldConfig["exec-outcomes"] = { type: "bullets", key: "exec-outcomes" };
+fieldConfig["mem-insight"] = { type: "multi-para", fields: [{key:"mem-insight-p1",label:"Paragraph 1"},{key:"mem-insight-p2",label:"Paragraph 2"}] };
+fieldConfig["fin-insight"] = { type: "multi-para", fields: [{key:"fin-insight-p1",label:"Paragraph 1"},{key:"fin-insight-p2",label:"Paragraph 2"}] };
+fieldConfig["att-insight"] = { type: "multi-para", fields: [{key:"att-insight-p1",label:"Paragraph 1"},{key:"att-insight-p2",label:"Paragraph 2"}] };
+fieldConfig["sales-insight"] = { type: "multi-para", fields: [{key:"sales-insight-p1",label:"Paragraph 1"},{key:"sales-insight-p2",label:"Paragraph 2"}] };
+fieldConfig["summary-insight"] = { type: "multi-para", fields: [{key:"summary-insight-p1",label:"Paragraph 1"},{key:"summary-insight-p2",label:"Paragraph 2"}] };
+fieldConfig["mem-takeaways"] = { type: "bullets", key: "mem-takeaways" };
+fieldConfig["fin-takeaways"] = { type: "bullets", key: "fin-takeaways" };
+fieldConfig["att-takeaways"] = { type: "bullets", key: "att-takeaways" };
+fieldConfig["sales-takeaways"] = { type: "bullets", key: "sales-takeaways" };
+fieldConfig["summary-takeaways"] = { type: "bullets", key: "summary-takeaways" };
+function openEditModal(fieldKey, sectionName, fieldName) { if (!editUnlocked) return; currentFieldKey = fieldKey; var cfg = fieldConfig[fieldKey]; document.getElementById("modalSectionLabel").textContent = sectionName; document.getElementById("modalTitle").textContent = fieldName; var body = document.getElementById("modalBody"); body.innerHTML = ""; if (cfg.type === "bullets") { var bullets = store[cfg.key] || []; var wrapper = document.createElement("div"); wrapper.className = "modal-field"; var lbl = document.createElement("label"); lbl.className = "field-label"; lbl.textContent = "Bullet points"; wrapper.appendChild(lbl); var listEditor = document.createElement("div"); listEditor.className = "bullet-list-editor"; listEditor.id = "bulletEditor"; bullets.forEach(function(item, i) { listEditor.appendChild(makeBulletRow(item, i)); }); var addBtn = document.createElement("button"); addBtn.className = "add-bullet-btn"; addBtn.textContent = "+ Add bullet"; addBtn.onclick = function() { var rows = listEditor.querySelectorAll(".bullet-row").length; listEditor.insertBefore(makeBulletRow("", rows), addBtn); }; listEditor.appendChild(addBtn); wrapper.appendChild(listEditor); body.appendChild(wrapper); } else if (cfg.type === "multi-para") { cfg.fields.forEach(function(f) { var wrapper = document.createElement("div"); wrapper.className = "modal-field"; var lbl = document.createElement("label"); lbl.className = "field-label"; lbl.textContent = f.label; var ta = document.createElement("textarea"); ta.className = "field-input"; ta.rows = 5; ta.setAttribute("data-para-key", f.key); ta.addEventListener("input", markDirty); var tmp = document.createElement("div"); tmp.innerHTML = store[f.key] || ""; ta.value = tmp.textContent || tmp.innerText || ""; wrapper.appendChild(lbl); wrapper.appendChild(ta); body.appendChild(wrapper); }); } document.getElementById("discardGate").style.display = "none"; document.getElementById("editOverlay").classList.add("active"); }
+function makeBulletRow(content, index) { var row = document.createElement("div"); row.className = "bullet-row"; var tmp = document.createElement("div"); tmp.innerHTML = content; var plainText = tmp.textContent || tmp.innerText || ""; var ta = document.createElement("textarea"); ta.className = "bullet-input"; ta.rows = 2; ta.value = plainText; ta.addEventListener("input", markDirty); var removeBtn = document.createElement("button"); removeBtn.className = "bullet-remove"; removeBtn.innerHTML = "×"; removeBtn.onclick = function() { row.remove(); markDirty(); }; row.appendChild(ta); row.appendChild(removeBtn); return row; }
+function saveModal() { var cfg = fieldConfig[currentFieldKey]; if (cfg.type === "bullets") { var bullets = Array.from(document.querySelectorAll("#bulletEditor .bullet-input")).map(function(ta) { return ta.value.trim(); }).filter(function(v) { return v.length > 0; }); store[cfg.key] = bullets; } else if (cfg.type === "multi-para") { cfg.fields.forEach(function(f) { var ta = document.querySelector("[data-para-key=\"" + f.key + "\"]"); if (ta) store[f.key] = ta.value.trim(); }); } renderStore(); closeModal(); }
+function closeModal() { document.getElementById("editOverlay").classList.remove("active"); document.getElementById("discardGate").style.display = "none"; currentFieldKey = null; document.getElementById("btnSave").classList.remove("pending"); }
+function markDirty() { document.getElementById("btnSave").classList.add("pending"); }
+function showDiscardGate() { document.getElementById("discardGate").style.display = "block"; }
+function hideDiscardGate() { document.getElementById("discardGate").style.display = "none"; }
+function discardAndClose() { document.getElementById("discardGate").style.display = "none"; closeModal(); }
+document.getElementById("btnSave").addEventListener("click", saveModal);
+document.getElementById("btnCancel").addEventListener("click", function() { if (document.getElementById("btnSave").classList.contains("pending")) { showDiscardGate(); } else { closeModal(); } });
+document.getElementById("modalClose").addEventListener("click", function() { if (document.getElementById("btnSave").classList.contains("pending")) { showDiscardGate(); } else { closeModal(); } });
+document.getElementById("btnExport").addEventListener("click", function() { exportHTML(); });
+function exportHTML() { var html = document.documentElement.outerHTML; var storeScript = "<script id=\"saved-store\">var savedStore = " + JSON.stringify(store) + ";<\/script>"; html = html.replace("</head>", storeScript + "</head>"); var blob = new Blob([html], { type: "text/html" }); var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "strong-castle-hill-management-09-2026.html"; a.click(); URL.revokeObjectURL(a.href); }
+if (document.readyState === "loading") { document.addEventListener("DOMContentLoaded", initStore); } else { initStore(); }
+
+</script>
+</body>
+</html>
